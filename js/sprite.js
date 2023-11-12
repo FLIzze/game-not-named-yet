@@ -78,14 +78,18 @@ window.addEventListener("keyup", (e) => {
     }
 });
 function checkCollision(entity1, entity2) {
-    return (entity1.position.x + entity1.width >= entity2.position.x &&
-        entity1.position.x <= entity2.position.x + entity2.width &&
-        entity1.position.y <= entity2.position.y + entity2.height &&
-        entity1.position.y + entity2.height >= entity2.position.y);
+    // console.log(entity2.bondary.position.x, entity2.position.x);
+    return (entity1.position.x + entity1.width >= entity2.bondary.position.x &&
+        entity1.position.x <= entity2.bondary.position.x + entity2.width &&
+        entity1.position.y <= entity2.bondary.position.y + entity2.height &&
+        entity1.position.y + entity2.height >= entity2.bondary.position.y);
 }
 function animate() {
     window.requestAnimationFrame(animate);
     if (dPressed && lastkey == 'd') {
+        for (let i = 0; i < boundaries.length; i++) {
+            console.log("oui");
+        }
         movables.forEach(move => {
             move.position.x -= 2;
         });
@@ -111,7 +115,7 @@ function animate() {
     }
     background.draw();
     boundaries.forEach(boundary => {
-        checkCollision(player, boundary);
+        // checkCollision(player, boundary);
         boundary.draw();
     });
     player.draw();
@@ -120,6 +124,7 @@ const offset = {
     x: -2300,
     y: -300,
 };
+let moving = true;
 const collisionsMap = [];
 for (let i = 0; i < collisions.length; i += 110) {
     collisionsMap.push(collisions.slice(i, i + 110));
