@@ -3,8 +3,8 @@ class Player {
     constructor() {
         this.position = { x: canvas.width / 2, y: canvas.height / 2 };
         this.imgSrc = "/img/player_down.png";
-        this.height = 21 * mapZoomLevel;
-        this.width = 13 * mapZoomLevel;
+        this.height = 21 * mapZoomLevel - 5;
+        this.width = 13 * mapZoomLevel + 1;
         document.body.appendChild(canvas);
     }
     draw() {
@@ -77,6 +77,12 @@ window.addEventListener("keyup", (e) => {
         //     break
     }
 });
+function checkCollision(entity1, entity2) {
+    return (entity1.position.x + entity1.width >= entity2.position.x &&
+        entity1.position.x <= entity2.position.x + entity2.width &&
+        entity1.position.y <= entity2.position.y + entity2.height &&
+        entity1.position.y + entity2.height >= entity2.position.y);
+}
 function animate() {
     window.requestAnimationFrame(animate);
     if (dPressed && lastkey == 'd') {
@@ -104,15 +110,15 @@ function animate() {
         player.imgSrc = "img/player_down.png";
     }
     background.draw();
-    // boundaries.forEach(boundary => {
-    //     boundary.draw();
-    // });
-    testboundary.draw();
+    boundaries.forEach(boundary => {
+        checkCollision(player, boundary);
+        boundary.draw();
+    });
     player.draw();
 }
 const offset = {
-    x: 0,
-    y: 0,
+    x: -2300,
+    y: -300,
 };
 const collisionsMap = [];
 for (let i = 0; i < collisions.length; i += 110) {
@@ -133,16 +139,14 @@ class Boundary {
 }
 Boundary.width = tileSize * mapZoomLevel;
 Boundary.height = tileSize * mapZoomLevel;
-// const boundaries: Array<Boundary> = []
-// collisionsMap.forEach((row, i) => {
-//     row.forEach((symbol, j) => {
-//         if (symbol == 7) {
-//             boundaries.push(new Boundary(j * Boundary.width + offset.x, i * Boundary.height + offset.y));
-//         }
-//     });
-// });
-// console.log(boundaries);
-const testboundary = new Boundary(900, 200);
+const boundaries = [];
+collisionsMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol == 7) {
+            boundaries.push(new Boundary(j * Boundary.width + offset.x, i * Boundary.height + offset.y));
+        }
+    });
+});
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -154,6 +158,6 @@ let wPressed = false;
 let sPressed = false;
 const background = new Background();
 const player = new Player();
-const movables = [background, testboundary];
+const movables = [background, ...boundaries];
 let lastkey = "";
 animate();
