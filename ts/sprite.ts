@@ -90,61 +90,109 @@ window.addEventListener("keyup", (e) => {
     }
 })
 
-function checkCollision(entity1: any, entity2: any) {
+function checkCollision(entity1: Player, entity2: Boundary, playerDirection: string) {
     // console.log(entity2.bondary.position.x, entity2.position.x);
+    if (playerDirection == 'd') {
+        return (
+            entity1.position.x + entity1.width + 3 >= entity2.position.x &&
+            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.y <= entity2.position.y + entity2.height &&
+            entity1.position.y + entity2.height >= entity2.position.y
+        )
+    }
+    if (playerDirection == 'a') {
+        return (
+            entity1.position.x + entity1.width >= entity2.position.x &&
+            entity1.position.x - 3 <= entity2.position.x + entity2.width &&
+            entity1.position.y <= entity2.position.y + entity2.height &&
+            entity1.position.y + entity2.height >= entity2.position.y
+        )
+    }
+    if (playerDirection == 'w') {
+        return (
+            entity1.position.x + entity1.width >= entity2.position.x &&
+            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.y - 3 <= entity2.position.y + entity2.height &&
+            entity1.position.y + entity2.height >= entity2.position.y
+        )
+    }
+    if (playerDirection == 's') {
+        return (
+            entity1.position.x + entity1.width >= entity2.position.x &&
+            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.y <= entity2.position.y + entity2.height &&
+            entity1.position.y + entity2.height + 12 >= entity2.position.y
+        )
+    }
     
-    return (
-        entity1.position.x + entity1.width >= entity2.bondary.position.x &&
-        entity1.position.x <= entity2.bondary.position.x + entity2.width &&
-        entity1.position.y <= entity2.bondary.position.y + entity2.height &&
-        entity1.position.y + entity2.height >= entity2.bondary.position.y
-    )
 }
 
 function animate() {
+    moving = true;
     window.requestAnimationFrame(animate);
     if (dPressed && lastkey == 'd') {
         for (let i=0; i < boundaries.length; i++) {
-            console.log("oui");
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            } 
         }
+    if (moving) 
+    movables.forEach(move => {
+        move.position.x -= 2;
+    });
+    player.imgSrc = "img/player_right.png"
 
-        movables.forEach(move => {
-            move.position.x -= 2;
-        });
-        player.imgSrc = "img/player_right.png"
     }
     else if (aPressed && lastkey == 'a') {
-        movables.forEach(move => {
-            move.position.x += 2;
-        });
-        player.imgSrc = "img/player_left.png"
+        for (let i=0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            } 
+        }
+    if (moving)
+    movables.forEach(move => {
+        move.position.x += 2;
+    });
+    player.imgSrc = "img/player_left.png"
+    
     }
     else if (wPressed && lastkey == 'w') {
-        movables.forEach(move => {
-            move.position.y += 2;
-        });
-        player.imgSrc = "img/player_up.png"
+        for (let i=0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            } 
+        }
+    if (moving)
+    movables.forEach(move => {
+        move.position.y += 2;
+    });
+    player.imgSrc = "img/player_up.png"
     }
     else if (sPressed && lastkey == 's')  {
-        movables.forEach(move => {
-            move.position.y -= 2;
-        });
-        player.imgSrc = "img/player_down.png"
+        for (let i=0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            } 
+        }
+    if (moving)
+    movables.forEach(move => {
+        move.position.y -= 2;
+    });
+    player.imgSrc = "img/player_down.png"
     }
 
     background.draw();
-    boundaries.forEach(boundary => {
-            // checkCollision(player, boundary);
-            boundary.draw();
-        });
-        player.draw();
-    }
+    // boundaries.forEach(boundary => {
+    //         // checkCollision(player, boundary);
+    //         // boundary.draw();
+    //     });
+    player.draw();
+}
     
-    const offset = {
-        x: -2300,
-        y: -300,
-    }
-    
+const offset = {
+    x: -2100,
+    y: -200,
+}
     
 let moving = true;
 const collisionsMap = [];
