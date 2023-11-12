@@ -96,7 +96,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
         return (
             entity1.position.x + entity1.width + 3 >= entity2.position.x &&
             entity1.position.x <= entity2.position.x + entity2.width &&
-            entity1.position.y <= entity2.position.y + entity2.height &&
+            entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y
         )
     }
@@ -104,7 +104,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
         return (
             entity1.position.x + entity1.width >= entity2.position.x &&
             entity1.position.x - 3 <= entity2.position.x + entity2.width &&
-            entity1.position.y <= entity2.position.y + entity2.height &&
+            entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y
         )
     }
@@ -112,7 +112,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
         return (
             entity1.position.x + entity1.width >= entity2.position.x &&
             entity1.position.x <= entity2.position.x + entity2.width &&
-            entity1.position.y - 3 <= entity2.position.y + entity2.height &&
+            entity1.position.y - 10 <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y
         )
     }
@@ -120,7 +120,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
         return (
             entity1.position.x + entity1.width >= entity2.position.x &&
             entity1.position.x <= entity2.position.x + entity2.width &&
-            entity1.position.y <= entity2.position.y + entity2.height &&
+            entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height + 12 >= entity2.position.y
         )
     }
@@ -190,8 +190,8 @@ function animate() {
 }
     
 const offset = {
-    x: -2100,
-    y: -200,
+    x: -2000,
+    y: -100,
 }
     
 let moving = true;
@@ -224,15 +224,16 @@ class Boundary {
 const boundaries: Array<Boundary> = []
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
-        if (symbol == 7) {
+        if (symbol == 6) {
             boundaries.push(new Boundary(j * Boundary.width + offset.x, i * Boundary.height + offset.y));
         }
     });
 });
 
 const canvas = document.createElement('canvas');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 1920;
+
+canvas.height = 1080;
 const c = canvas.getContext('2d');
 c!.imageSmoothingEnabled = false;
 
