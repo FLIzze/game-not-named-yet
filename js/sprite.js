@@ -41,7 +41,7 @@ class Player {
                 this.frame.y = 164;
             }
             else if (lastkey == 'a') {
-                this.frame.y = 119;
+                this.frame.y = 118;
             }
             else if (lastkey == 'd') {
                 this.frame.y = 70;
@@ -121,26 +121,26 @@ function checkCollision(entity1, entity2, playerDirection) {
         return false;
     // console.log(entity2.bondary.position.x, entity2.position.x);
     if (playerDirection == 'd') {
-        return (entity1.position.x + entity1.width + 3 >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width &&
+        return (entity1.position.x + entity1.width + 5 >= entity2.position.x &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y);
     }
     if (playerDirection == 'a') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x - 3 <= entity2.position.x + entity2.width &&
+            entity1.position.x - 5 <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y);
     }
     if (playerDirection == 'w') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y - 10 <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y);
     }
     if (playerDirection == 's') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height + 12 >= entity2.position.y);
     }
@@ -197,10 +197,10 @@ function animate() {
         player.imgSrc = "img/player/player.png";
     }
     background.draw();
-    boundaries.forEach(boundary => {
-        checkCollision(player, boundary, "none");
-        boundary.draw();
-    });
+    // boundaries.forEach(boundary => {
+    //         checkCollision(player, boundary, "none");
+    //         boundary.draw();
+    //     });
     player.draw();
 }
 const offset = {
@@ -230,7 +230,7 @@ Boundary.height = tileSize * mapZoomLevel;
 const boundaries = [];
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
-        if (symbol == 6) {
+        if (symbol == 1) {
             boundaries.push(new Boundary(j * Boundary.width + offset.x, i * Boundary.height + offset.y));
         }
     });

@@ -6,7 +6,6 @@ class Player {
     public frame;
     public frameCount: number;
     public sprint: number;
-    public framerate: number;
 
     constructor() {
         this.sprint = 0;
@@ -45,7 +44,7 @@ class Player {
             } else if (lastkey == 'w') {
                 this.frame.y = 164;
             } else if (lastkey == 'a') {
-                this.frame.y = 119;
+                this.frame.y = 118;
             } else if (lastkey == 'd') {
                 this.frame.y = 70;
             }
@@ -134,8 +133,8 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
     // console.log(entity2.bondary.position.x, entity2.position.x);
     if (playerDirection == 'd') {
         return (
-            entity1.position.x + entity1.width + 3 >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.x + entity1.width + 5 >= entity2.position.x &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y
         )
@@ -143,7 +142,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
     if (playerDirection == 'a') {
         return (
             entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x - 3 <= entity2.position.x + entity2.width &&
+            entity1.position.x - 5 <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y
         )
@@ -151,7 +150,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
     if (playerDirection == 'w') {
         return (
             entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y - 10 <= entity2.position.y &&
             entity1.position.y + entity2.height >= entity2.position.y
         )
@@ -159,7 +158,7 @@ function checkCollision(entity1: Player, entity2: Boundary, playerDirection: str
     if (playerDirection == 's') {
         return (
             entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height + 12 >= entity2.position.y
         )
@@ -222,10 +221,10 @@ function animate() {
     }
 
     background.draw();
-    boundaries.forEach(boundary => {
-            checkCollision(player, boundary, "none");
-            boundary.draw();
-        });
+    // boundaries.forEach(boundary => {
+    //         checkCollision(player, boundary, "none");
+    //         boundary.draw();
+    //     });
     player.draw();
 }
 
@@ -264,7 +263,7 @@ class Boundary {
 const boundaries: Array<Boundary> = []
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
-        if (symbol == 6) {
+        if (symbol == 1) {
             boundaries.push(new Boundary(j * Boundary.width + offset.x, i * Boundary.height + offset.y));
         }
     });
