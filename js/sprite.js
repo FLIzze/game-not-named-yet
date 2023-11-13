@@ -1,10 +1,13 @@
 "use strict";
 class Player {
     constructor() {
+        this.sprint = 0;
         this.position = { x: canvas.width / 2, y: canvas.height / 2 };
-        this.imgSrc = "/img/player_down.png";
-        this.height = 21 * mapZoomLevel - 5;
-        this.width = 13 * mapZoomLevel + 1;
+        this.imgSrc = "/img/player/player.png";
+        this.height = 20 * mapZoomLevel * 1.5;
+        this.width = 13 * mapZoomLevel * 1.5;
+        this.frame = { x: 11, y: 22 };
+        this.frameCount = 0;
         document.body.appendChild(canvas);
     }
     draw() {
@@ -14,11 +17,47 @@ class Player {
         let y = this.position.y;
         let height = this.height;
         let width = this.width;
+        if (this.frameCount == 25) {
+            this.frame.x += 48;
+            this.frameCount = 0;
+        }
+        if (lastkey == 'd' && dPressed) {
+            this.frame.y = 258;
+        }
+        else if (lastkey == 's' && sPressed) {
+            this.frame.y = 208;
+        }
+        else if (lastkey == 'w' && wPressed) {
+            this.frame.y = 352;
+        }
+        else if (lastkey == 'a' && aPressed) {
+            this.frame.y = 306;
+        }
+        else {
+            if (lastkey == 's') {
+                this.frame.y = 22;
+            }
+            else if (lastkey == 'w') {
+                this.frame.y = 164;
+            }
+            else if (lastkey == 'a') {
+                this.frame.y = 119;
+            }
+            else if (lastkey == 'd') {
+                this.frame.y = 70;
+            }
+        }
+        let frame = { x: this.frame.x, y: this.frame.y };
         img.onload = function () {
-            c.drawImage(img, x, y, width, height);
+            c.drawImage(img, frame.x, frame.y, 24, 42, x, y, 13 * mapZoomLevel * 1.7, 20 * mapZoomLevel * 1.7);
         };
+        if (this.frame.x >= 285) {
+            this.frame.x = 11;
+        }
+        this.frameCount++;
     }
 }
+//70/20/164/118
 class Background {
     constructor() {
         this.position = { x: offset.x, y: offset.y };
@@ -53,9 +92,9 @@ window.addEventListener("keydown", (e) => {
             sPressed = true;
             lastkey = 's';
             break;
-        // case ' ':
-        //     spacePressed = true;
-        //     break
+        case ' ':
+            player.sprint = 1.5;
+            break;
     }
 });
 window.addEventListener("keyup", (e) => {
@@ -72,12 +111,14 @@ window.addEventListener("keyup", (e) => {
         case 's':
             sPressed = false;
             break;
-        // case ' ':
-        //     spacePressed = false;
-        //     break
+        case ' ':
+            player.sprint = 0;
+            break;
     }
 });
 function checkCollision(entity1, entity2, playerDirection) {
+    if (playerDirection == 'none')
+        return false;
     // console.log(entity2.bondary.position.x, entity2.position.x);
     if (playerDirection == 'd') {
         return (entity1.position.x + entity1.width + 3 >= entity2.position.x &&
@@ -115,9 +156,9 @@ function animate() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.x -= 2;
+                move.position.x -= 2 + player.sprint;
             });
-        player.imgSrc = "img/player_right.png";
+        player.imgSrc = "img/player/player.png";
     }
     else if (aPressed && lastkey == 'a') {
         for (let i = 0; i < boundaries.length; i++) {
@@ -127,9 +168,9 @@ function animate() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.x += 2;
+                move.position.x += 2 + player.sprint;
             });
-        player.imgSrc = "img/player_left.png";
+        player.imgSrc = "img/player/player.png";
     }
     else if (wPressed && lastkey == 'w') {
         for (let i = 0; i < boundaries.length; i++) {
@@ -139,9 +180,9 @@ function animate() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.y += 2;
+                move.position.y += 2 + player.sprint;
             });
-        player.imgSrc = "img/player_up.png";
+        player.imgSrc = "img/player/player.png";
     }
     else if (sPressed && lastkey == 's') {
         for (let i = 0; i < boundaries.length; i++) {
@@ -151,15 +192,15 @@ function animate() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.y -= 2;
+                move.position.y -= 2 + player.sprint;
             });
-        player.imgSrc = "img/player_down.png";
+        player.imgSrc = "img/player/player.png";
     }
     background.draw();
-    // boundaries.forEach(boundary => {
-    //         // checkCollision(player, boundary);
-    //         // boundary.draw();
-    //     });
+    boundaries.forEach(boundary => {
+        checkCollision(player, boundary, "none");
+        boundary.draw();
+    });
     player.draw();
 }
 const offset = {
