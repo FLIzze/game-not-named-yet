@@ -1,5 +1,6 @@
 import Player from "./player.js";
 import Background from "./background.js";
+import Sprite from "./sprite.js";
 import collisions from "./collision.js";
 window.addEventListener("keydown", (e) => {
     switch (e.key) {
@@ -150,7 +151,9 @@ function animate() {
     //         checkCollision(player, boundary, "none");
     //         boundary.draw();
     //     });
+    pnj.draw(c);
     player.draw(c);
+    pnj2.draw(c);
 }
 const offset = {
     x: -2000,
@@ -194,7 +197,9 @@ let aPressed = false;
 let wPressed = false;
 let sPressed = false;
 const background = new Background(offset, canvas);
+const pnj = new Sprite({ x: -200 * 4.5, y: 0 }, "./img/water/water.png", canvas);
 const player = new Player(canvas);
-const movables = [background, ...boundaries];
+const pnj2 = new Sprite({ x: 16 * 4.5, y: 0 }, "./img/water/water.png", canvas);
+const movables = [background, ...boundaries, pnj, pnj2];
 let lastkey = "";
 animate();

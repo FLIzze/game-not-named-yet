@@ -1,13 +1,13 @@
 class Sprite {
-    public position;
     public width: number;
     public height: number;
 
-    constructor(public imgSrc: string, canvas: HTMLCanvasElement) {
-        this.position = {x: canvas.width/2,y: canvas.height/2};
+    constructor(public position: {x: number, y: number}, public imgSrc: string, canvas: HTMLCanvasElement) {
+        this.position.x = position.x;
+        this.position.y = position.y;
         this.imgSrc = imgSrc;
-        this.height = 20*4.5*1.5;
-        this.width = 13*4.5*1.5;
+        this.height = 16*4.5;
+        this.width = 16*4.5;
         document.body.appendChild(canvas);
     }
 
@@ -15,8 +15,10 @@ class Sprite {
         const img = new Image();
         img.src = this.imgSrc;
         let position = {x: this.position.x, y: this.position.y}
+        let height = this.height;
+        let width = this.width;
         img.onload = function() {
-            c!.drawImage(img, position.x, position.y)
+            c!.drawImage(img, position.x, position.y, width, height)
         }
     }
 }

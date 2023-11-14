@@ -1,7 +1,7 @@
 import Sprite from "./sprite.js";
 class Player extends Sprite {
     constructor(canvas) {
-        super("../img/player/player.png", canvas);
+        super({ x: canvas.width / 2, y: canvas.height / 2 }, "../img/player/player.png", canvas);
         this.sprint = 0;
         this.frame = { x: 11, y: 22 };
         this.frameCount = 0;
