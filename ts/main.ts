@@ -1,6 +1,7 @@
-import Player from "./player"
-import Background from "./background"
-import Sprite from "./sprite"
+import Player from "./player.js"
+import Background from "./background.js"
+import Sprite from "./sprite.js"
+import collisions from "./collision.js"
 
 window.addEventListener("keydown", (e) => {
     switch (e.key) {
@@ -117,7 +118,6 @@ function animate() {
     movables.forEach(move => {
         move.position.x -= 2 + player.sprint;
     });
-    player.imgSrc = "img/player/player.png"
 
     }
     else if (aPressed && lastkey == 'a') {
@@ -130,7 +130,6 @@ function animate() {
     movables.forEach(move => {
         move.position.x += 2 + player.sprint;
     });
-    player.imgSrc = "img/player/player.pn"
     
     }
     else if (wPressed && lastkey == 'w') {
@@ -143,7 +142,6 @@ function animate() {
     movables.forEach(move => {
         move.position.y += 2 + player.sprint;
     });
-    player.imgSrc = "img/player/player.png"
     }
     else if (sPressed && lastkey == 's')  {
         for (let i=0; i < boundaries.length; i++) {
@@ -155,7 +153,6 @@ function animate() {
     movables.forEach(move => {
         move.position.y -= 2 + player.sprint;
     });
-    player.imgSrc = "img/player/player.png"
     }
 
     background.draw(c);

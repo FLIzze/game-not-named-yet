@@ -1,4 +1,4 @@
-import Sprite from "C:/Users/alexa/Documents/ynov/fighting-game/ts/sprite";
+import Sprite from "./sprite.js";
 class Player extends Sprite {
     constructor(canvas) {
         super("../img/player/player.png", canvas);
