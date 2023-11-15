@@ -23,7 +23,7 @@ window.addEventListener("keydown", (e) => {
             lastkey = 's';
             break
         case ' ':
-            player.sprint = 1.5;
+            sprintingSpeed = 1.5;
             break
     }
 })
@@ -43,7 +43,7 @@ window.addEventListener("keyup", (e) => {
             sPressed = false;
             break
         case ' ':
-            player.sprint = 0;
+            sprintingSpeed = 0;
             break
     }
 })
@@ -91,20 +91,19 @@ function checkCollision(entity1: Player, entity2: Interaction, playerDirection: 
     }
 }
 
-const fps = 30;
-
 function animate() {
+    requestAnimationFrame(animate);
     moving = true;
     checkForInteractions();
     checkIfPlayerCollide();
     playerAnimation();
 
+    c!.clearRect;
     background.draw(c);
     interactions.forEach(interaction => {
         interaction.draw(c!);
     });
     player.draw(c);
-    requestAnimationFrame(animate);
 }
 
 function checkForInteractions() {
@@ -135,7 +134,7 @@ function checkIfPlayerCollide() {
         }
     if (moving) 
     movables.forEach(move => {
-        move.position.x -= 2 + player.sprint;
+        move.position.x -= walkingSpeed + sprintingSpeed;
     });
 
     }
@@ -147,7 +146,7 @@ function checkIfPlayerCollide() {
         }
     if (moving)
     movables.forEach(move => {
-        move.position.x += 2 + player.sprint;
+        move.position.x += walkingSpeed + sprintingSpeed;
     });
     
     }
@@ -159,7 +158,7 @@ function checkIfPlayerCollide() {
         }
     if (moving)
     movables.forEach(move => {
-        move.position.y += 2 + player.sprint;
+        move.position.y += walkingSpeed + sprintingSpeed;
     });
     }
     else if (sPressed && lastkey == 's')  {
@@ -170,7 +169,7 @@ function checkIfPlayerCollide() {
         }
     if (moving)
     movables.forEach(move => {
-        move.position.y -= 2 + player.sprint;
+        move.position.y -= 2 + sprintingSpeed;
     });
     }
 }
@@ -207,7 +206,9 @@ const offset = {
     x: -2000,
     y: -200,
 }
-    
+
+let sprintingSpeed = 0;
+const walkingSpeed = 1.5;
 let moving = true;
 const collisionsMap = [];
 for (let i = 0; i < Collisions.default.Collisions.length; i+=110) {

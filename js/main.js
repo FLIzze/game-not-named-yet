@@ -21,7 +21,7 @@ window.addEventListener("keydown", (e) => {
             lastkey = 's';
             break;
         case ' ':
-            player.sprint = 1.5;
+            sprintingSpeed = 1.5;
             break;
     }
 });
@@ -40,7 +40,7 @@ window.addEventListener("keyup", (e) => {
             sPressed = false;
             break;
         case ' ':
-            player.sprint = 0;
+            sprintingSpeed = 0;
             break;
     }
 });
@@ -78,18 +78,18 @@ function checkCollision(entity1, entity2, playerDirection) {
             entity1.position.y + entity2.height >= entity2.position.y);
     }
 }
-const fps = 30;
 function animate() {
+    requestAnimationFrame(animate);
     moving = true;
     checkForInteractions();
     checkIfPlayerCollide();
     playerAnimation();
+    c.clearRect;
     background.draw(c);
     interactions.forEach(interaction => {
         interaction.draw(c);
     });
     player.draw(c);
-    requestAnimationFrame(animate);
 }
 function checkForInteractions() {
     interactions.forEach(interaction => {
@@ -118,7 +118,7 @@ function checkIfPlayerCollide() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.x -= 2 + player.sprint;
+                move.position.x -= walkingSpeed + sprintingSpeed;
             });
     }
     else if (aPressed && lastkey == 'a') {
@@ -129,7 +129,7 @@ function checkIfPlayerCollide() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.x += 2 + player.sprint;
+                move.position.x += walkingSpeed + sprintingSpeed;
             });
     }
     else if (wPressed && lastkey == 'w') {
@@ -140,7 +140,7 @@ function checkIfPlayerCollide() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.y += 2 + player.sprint;
+                move.position.y += walkingSpeed + sprintingSpeed;
             });
     }
     else if (sPressed && lastkey == 's') {
@@ -151,7 +151,7 @@ function checkIfPlayerCollide() {
         }
         if (moving)
             movables.forEach(move => {
-                move.position.y -= 2 + player.sprint;
+                move.position.y -= 2 + sprintingSpeed;
             });
     }
 }
@@ -192,6 +192,8 @@ const offset = {
     x: -2000,
     y: -200,
 };
+let sprintingSpeed = 0;
+const walkingSpeed = 1.5;
 let moving = true;
 const collisionsMap = [];
 for (let i = 0; i < Collisions.default.Collisions.length; i += 110) {
@@ -201,7 +203,6 @@ const interactionsMap = [];
 for (let i = 0; i < Collisions.default.Interactions.length; i += 100) {
     interactionsMap.push(Collisions.default.Interactions.slice(i, i + 110));
 }
-// console.log(interactionsMap);
 const mapZoomLevel = 4.5;
 const tileSize = 16;
 const boundaries = [];
