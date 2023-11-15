@@ -1,5 +1,4 @@
 import Background from "./background.js";
-import Dialogue from "./dialogue.js";
 import Interaction from "./interaction.js";
 import Player from "./player.js";
 import * as Collisions from "./collision.js";
@@ -74,35 +73,89 @@ function checkCollision(entity1, entity2, playerDirection) {
     }
     else if (playerDirection == 'all') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
+            entity1.position.x <= entity2.position.x + entity2.width &&
             entity1.position.y <= entity2.position.y &&
-            entity1.position.y + entity2.height + 12 >= entity2.position.y);
+            entity1.position.y + entity2.height >= entity2.position.y);
     }
 }
+const fps = 30;
 function animate() {
+    moving = true;
+    checkForInteractions();
+    checkIfPlayerCollide();
+    playerAnimation();
+    background.draw(c);
+    interactions.forEach(interaction => {
+        interaction.draw(c);
+    });
+    player.draw(c);
+    requestAnimationFrame(animate);
+}
+function checkForInteractions() {
     interactions.forEach(interaction => {
         if (checkCollision(player, interaction, lastkey)) {
             if (!interaction.isUsed)
-                dialogue.text = "[E] " + interaction.name.toUpperCase();
+                dialogue("[E] " + interaction.name.toUpperCase());
             window.addEventListener("keydown", (e) => {
                 if (e.key == 'e') {
                     interaction.isUsed = true;
                 }
             });
-            if (interaction.isUsed && interaction.frameCount < 40) {
+            if (interaction.isUsed) {
                 if (interaction.name == 'chest') {
                     interaction.imgSrc = "/img/open-chest.png";
                 }
-                dialogue.text = interaction.name;
-                interaction.frameCount++;
-            }
-            else if (interaction.isUsed) {
-                dialogue.text = "";
             }
         }
     });
-    dialogue.draw();
-    dialogue.text = "";
+}
+function checkIfPlayerCollide() {
+    if (dPressed && lastkey == 'd') {
+        for (let i = 0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            }
+        }
+        if (moving)
+            movables.forEach(move => {
+                move.position.x -= 2 + player.sprint;
+            });
+    }
+    else if (aPressed && lastkey == 'a') {
+        for (let i = 0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            }
+        }
+        if (moving)
+            movables.forEach(move => {
+                move.position.x += 2 + player.sprint;
+            });
+    }
+    else if (wPressed && lastkey == 'w') {
+        for (let i = 0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            }
+        }
+        if (moving)
+            movables.forEach(move => {
+                move.position.y += 2 + player.sprint;
+            });
+    }
+    else if (sPressed && lastkey == 's') {
+        for (let i = 0; i < boundaries.length; i++) {
+            if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            }
+        }
+        if (moving)
+            movables.forEach(move => {
+                move.position.y -= 2 + player.sprint;
+            });
+    }
+}
+function playerAnimation() {
     if (lastkey == 'd' && dPressed) {
         player.frame.y = 258;
     }
@@ -129,88 +182,11 @@ function animate() {
             player.frame.y = 70;
         }
     }
-    moving = true;
-    window.requestAnimationFrame(animate);
-    if (dPressed && lastkey == 'd') {
-        for (let i = 0; i < boundaries.length; i++) {
-            if (checkCollision(player, boundaries[i], lastkey)) {
-                moving = false;
-            }
-        }
-        for (let i = 0; i < interactions.length; i++) {
-            if (checkCollision(player, interactions[i], lastkey)) {
-                moving = false;
-            }
-        }
-        if (moving)
-            movables.forEach(move => {
-                move.position.x -= 2 + player.sprint;
-            });
-    }
-    else if (aPressed && lastkey == 'a') {
-        for (let i = 0; i < boundaries.length; i++) {
-            if (checkCollision(player, boundaries[i], lastkey)) {
-                moving = false;
-            }
-        }
-        for (let i = 0; i < interactions.length; i++) {
-            if (checkCollision(player, interactions[i], lastkey)) {
-                moving = false;
-            }
-        }
-        if (moving)
-            movables.forEach(move => {
-                move.position.x += 2 + player.sprint;
-            });
-    }
-    else if (wPressed && lastkey == 'w') {
-        for (let i = 0; i < boundaries.length; i++) {
-            if (checkCollision(player, boundaries[i], lastkey)) {
-                moving = false;
-            }
-        }
-        for (let i = 0; i < interactions.length; i++) {
-            if (checkCollision(player, interactions[i], lastkey)) {
-                moving = false;
-            }
-        }
-        if (moving)
-            movables.forEach(move => {
-                move.position.y += 2 + player.sprint;
-            });
-    }
-    else if (sPressed && lastkey == 's') {
-        for (let i = 0; i < boundaries.length; i++) {
-            if (checkCollision(player, boundaries[i], lastkey)) {
-                moving = false;
-            }
-        }
-        for (let i = 0; i < interactions.length; i++) {
-            if (checkCollision(player, interactions[i], lastkey)) {
-                moving = false;
-            }
-        }
-        if (moving)
-            movables.forEach(move => {
-                move.position.y -= 2 + player.sprint;
-            });
-    }
-    background.draw(c);
-    // boundaries.forEach(boundary => {
-    //     checkCollision(player, boundary, "none");
-    //     boundary.draw();
-    // });
-    interactions.forEach(interaction => {
-        if (interaction.name == "chest") {
-            interaction.imgSrc = "/img/chest.png";
-            interaction.draw(c);
-        }
-        else if (interaction.name == "pnj") {
-            interaction.imgSrc = "/img/chest.png";
-            interaction.draw(c);
-        }
-    });
-    player.draw(c);
+}
+function dialogue(text, x = canvas.width / 2, y = canvas.height / 2) {
+    c.font = "30px Arial";
+    c.fillStyle = "white";
+    c.fillText(text, x, y);
 }
 const offset = {
     x: -2000,
@@ -259,6 +235,6 @@ let sPressed = false;
 const background = new Background(offset, canvas);
 const player = new Player(canvas);
 const movables = [background, ...boundaries, ...interactions];
-let dialogue = new Dialogue("", { x: canvas.width / 2, y: canvas.height / 2 }, "white");
+// let dialogue = new Dialogue("", {x: canvas.width/2, y: canvas.height/2}, "white")
 let lastkey = "";
 animate();

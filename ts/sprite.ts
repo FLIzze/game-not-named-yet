@@ -1,5 +1,3 @@
-import Dialogue from "./dialogue.js";
-
 class Sprite {
     public width: number;
     public height: number;
