@@ -81,24 +81,36 @@ function checkCollision(entity1, entity2, playerDirection) {
     }
 }
 function animate() {
-    if (checkInteraction('all')) {
-        dialogue.text = "[E] TO OPEN CHEST";
-        window.addEventListener('keydown', (e) => {
-            if (e.key == 'e') {
-                dialogue.isUsed = true;
-            }
-        });
-    }
-    else {
-        dialogue.text = "";
-    }
-    if (dialogue.isUsed) {
-        dialogue.text = "YOU OPENED CHEST.";
-        if (dialogue.frameCount < 90) {
-            dialogue.frameCount++;
-        }
-        if (dialogue.frameCount >= 90) {
-            dialogue.text = "";
+    // if (checkInteraction('all')) {
+    //     dialogue.text = "[E] TO OPEN CHEST";
+    //     window.addEventListener('keydown', (e) => {
+    //         if (e.key == 'e') {
+    //             dialogue.isUsed = true;
+    //         } 
+    //     })
+    //     if (dialogue.isUsed) {
+    //         dialogue.text = "YOU OPENED CHEST.";
+    //         if (dialogue.frameCount < 90) {
+    //             dialogue.frameCount++;
+    //         }
+    //         if (dialogue.frameCount >= 90) {
+    //             dialogue.text = "";
+    //         }
+    //     }
+    // } else {
+    //     dialogue.text = "";
+    // }
+    // if (dialogueOnInte != false) {
+    //     dialogue.text = "[E] TO OPEN CHEST."
+    //     window.addEventListener('keydown', (e) => {
+    //         if (e.key == 'e') {
+    //         }
+    //     })
+    // }
+    for (let i = 0; i < interactions.length; i++) {
+        if (checkCollision(player, interactions[i], lastkey)) {
+            dialogue.text = "[E] TO OPEN CHEST.";
+            // return interactions[i];
         }
     }
     dialogue.draw();
@@ -216,14 +228,6 @@ function animate() {
     player.draw(c);
     pnj2.draw(c);
     // dialogue("OUI BONJOUR.", player, 'white', '80px')
-}
-function checkInteraction(direction = lastkey) {
-    for (let i = 0; i < interactions.length; i++) {
-        if (checkCollision(player, interactions[i], lastkey)) {
-            return true;
-        }
-    }
-    return false;
 }
 // function dialogue(text: string, who: Sprite, color = "white", fontSize = "30px font/PixelifySans-VariableFont_wght", position = {x: who.position.x-who.width/2+who.width/5, y: who.position.y}) {
 //     cText!.clearRect(0, 0, canvasText.width, canvasText.height);
