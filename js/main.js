@@ -1,6 +1,5 @@
 import Background from "./background.js";
 import Dialogue from "./dialogue.js";
-import Sprite from "./sprite.js";
 import Interaction from "./interaction.js";
 import Player from "./player.js";
 import * as Collisions from "./collision.js";
@@ -81,49 +80,29 @@ function checkCollision(entity1, entity2, playerDirection) {
     }
 }
 function animate() {
-    // if (checkInteraction('all')) {
-    //     dialogue.text = "[E] TO OPEN CHEST";
-    //     window.addEventListener('keydown', (e) => {
-    //         if (e.key == 'e') {
-    //             dialogue.isUsed = true;
-    //         } 
-    //     })
-    //     if (dialogue.isUsed) {
-    //         dialogue.text = "YOU OPENED CHEST.";
-    //         if (dialogue.frameCount < 90) {
-    //             dialogue.frameCount++;
-    //         }
-    //         if (dialogue.frameCount >= 90) {
-    //             dialogue.text = "";
-    //         }
-    //     }
-    // } else {
-    //     dialogue.text = "";
-    // }
-    // if (dialogueOnInte != false) {
-    //     dialogue.text = "[E] TO OPEN CHEST."
-    //     window.addEventListener('keydown', (e) => {
-    //         if (e.key == 'e') {
-    //         }
-    //     })
-    // }
-    for (let i = 0; i < interactions.length; i++) {
-        if (checkCollision(player, interactions[i], lastkey)) {
-            dialogue.text = "[E] TO OPEN CHEST.";
-            // return interactions[i];
+    interactions.forEach(interaction => {
+        if (checkCollision(player, interaction, lastkey)) {
+            if (!interaction.isUsed)
+                dialogue.text = "[E] " + interaction.name.toUpperCase();
+            window.addEventListener("keydown", (e) => {
+                if (e.key == 'e') {
+                    interaction.isUsed = true;
+                }
+            });
+            if (interaction.isUsed && interaction.frameCount < 40) {
+                if (interaction.name == 'chest') {
+                    interaction.imgSrc = "/img/open-chest.png";
+                }
+                dialogue.text = interaction.name;
+                interaction.frameCount++;
+            }
+            else if (interaction.isUsed) {
+                dialogue.text = "";
+            }
         }
-    }
+    });
     dialogue.draw();
-    // window.addEventListener("keydown", (e) => {
-    //     if (checkInteraction()) {
-    //         dialogue("BONJOUR", player);
-    //     }
-    //     if (e.key == 'e') {
-    //         if (checkInteraction()) {
-    //             dialogue("BONJOUR", player);
-    //         }
-    //     }
-    // })
+    dialogue.text = "";
     if (lastkey == 'd' && dPressed) {
         player.frame.y = 258;
     }
@@ -222,21 +201,17 @@ function animate() {
     //     boundary.draw();
     // });
     interactions.forEach(interaction => {
-        interaction.draw(c, "./img/chest.png");
+        if (interaction.name == "chest") {
+            interaction.imgSrc = "/img/chest.png";
+            interaction.draw(c);
+        }
+        else if (interaction.name == "pnj") {
+            interaction.imgSrc = "/img/chest.png";
+            interaction.draw(c);
+        }
     });
-    pnj.draw(c);
     player.draw(c);
-    pnj2.draw(c);
-    // dialogue("OUI BONJOUR.", player, 'white', '80px')
 }
-// function dialogue(text: string, who: Sprite, color = "white", fontSize = "30px font/PixelifySans-VariableFont_wght", position = {x: who.position.x-who.width/2+who.width/5, y: who.position.y}) {
-//     cText!.clearRect(0, 0, canvasText.width, canvasText.height);
-//     if (text != "") {
-//         cText!.font = "30px Arial";
-//         cText!.fillStyle = color
-//         cText!.fillText(text, position.x, position.y-18)
-//     }
-// }
 const offset = {
     x: -2000,
     y: -200,
@@ -257,7 +232,7 @@ const boundaries = [];
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 1) {
-            boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y));
+            boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "collision", ""));
         }
     });
 });
@@ -265,7 +240,10 @@ const interactions = [];
 interactionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 1) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y));
+            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "chest", "img/chest.png"));
+        }
+        else if (symbol == 2) {
+            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "pnj", "img/player/player_left.png"));
         }
     });
 });
@@ -279,16 +257,8 @@ let aPressed = false;
 let wPressed = false;
 let sPressed = false;
 const background = new Background(offset, canvas);
-const pnj = new Sprite({ x: -200 * 4.5, y: 0 }, "./img/water/water.png", canvas);
 const player = new Player(canvas);
-const pnj2 = new Sprite({ x: 16 * 4.5, y: 0 }, "./img/water/water.png", canvas);
-const movables = [background, ...boundaries, pnj, pnj2, ...interactions];
+const movables = [background, ...boundaries, ...interactions];
 let dialogue = new Dialogue("", { x: canvas.width / 2, y: canvas.height / 2 }, "white");
-// interactions.forEach(interaction => {
-//     interaction("", {x: canvas.width/2, y: canvas.height/2}, "white")
-// });
-// interactions.forEach(interaction => {
-//     interaction("", {x: canvas.width/2, y: canvas.height/2}, "white") 
-// });
 let lastkey = "";
 animate();

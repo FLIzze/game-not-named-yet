@@ -3,20 +3,23 @@ class Interaction {
     public width: number;
     public height: number;
     public isUsed: boolean = false;
+    public frameCount: number = 0;
+    public name: string;
     static width = 16*4.5;
     static height = 16*4.5;
+    public imgSrc: string;
     
-    constructor(positionX = 0, positionY = 0) {
+    constructor(positionX = 0, positionY = 0, name: string, imgSrc: string) {
         this.position = {x: positionX, y: positionY}
         this.height = 16 * 4.5;
         this.width = 16 * 4.5;
+        this.name = name;
+        this.imgSrc = imgSrc;
     }
     
-    draw(c: CanvasRenderingContext2D, imgSrc: string) {
-        c!.fillStyle = 'white'
-        // c!.fillRect(this.position.x, this.position.y, this.width, this.height);
+    draw(c: CanvasRenderingContext2D) {
         const img = new Image();
-        img.src = imgSrc;
+        img.src = this.imgSrc;
         let position = {x: this.position.x, y: this.position.y}
         let height = this.height;
         let width = this.width;

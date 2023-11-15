@@ -1,15 +1,16 @@
 class Interaction {
-    constructor(positionX = 0, positionY = 0) {
+    constructor(positionX = 0, positionY = 0, name, imgSrc) {
         this.isUsed = false;
+        this.frameCount = 0;
         this.position = { x: positionX, y: positionY };
         this.height = 16 * 4.5;
         this.width = 16 * 4.5;
+        this.name = name;
+        this.imgSrc = imgSrc;
     }
-    draw(c, imgSrc) {
-        c.fillStyle = 'white';
-        // c!.fillRect(this.position.x, this.position.y, this.width, this.height);
+    draw(c) {
         const img = new Image();
-        img.src = imgSrc;
+        img.src = this.imgSrc;
         let position = { x: this.position.x, y: this.position.y };
         let height = this.height;
         let width = this.width;

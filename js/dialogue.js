@@ -4,7 +4,6 @@ class Dialogue {
         this.position = position;
         this.color = color;
         this.isUsed = false;
-        this.frameCount = 0;
         this.text = text;
         this.position.x = position.x;
         this.position.y = position.y;
@@ -19,7 +18,7 @@ class Dialogue {
         if (this.text != "") {
             this.cText.font = "30px Arial";
             this.cText.fillStyle = this.color;
-            this.cText.fillText(this.text, this.position.x, this.position.y - 18);
+            this.cText.fillText(this.text, this.position.x, this.position.y);
         }
         else {
             this.cText.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
