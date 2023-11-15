@@ -1,5 +1,6 @@
 class Interaction {
     constructor(positionX = 0, positionY = 0) {
+        this.isUsed = false;
         this.position = { x: positionX, y: positionY };
         this.height = 16 * 4.5;
         this.width = 16 * 4.5;

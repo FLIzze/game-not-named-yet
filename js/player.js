@@ -4,7 +4,6 @@ class Player extends Sprite {
         super({ x: canvas.width / 2, y: canvas.height / 2 }, "../img/player/player.png", canvas);
         this.sprint = 0;
         this.frame = { x: 11, y: 22 };
-        this.frameCount = 0;
     }
     draw(c) {
         const img = new Image();

@@ -1,7 +1,9 @@
 class Sprite {
-    constructor(position, imgSrc, canvas) {
+    // public dialogue: string = "";
+    constructor(position, imgSrc = "/img/", canvas) {
         this.position = position;
         this.imgSrc = imgSrc;
+        this.frameCount = 0;
         this.position.x = position.x;
         this.position.y = position.y;
         this.imgSrc = imgSrc;

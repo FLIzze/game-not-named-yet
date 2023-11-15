@@ -1,8 +1,9 @@
-import Player from "./player.js"
-import Background from "./background.js"
-import Sprite from "./sprite.js"
+import Background from "./background.js";
+import Dialogue from "./dialogue.js";
+import Sprite from "./sprite.js";
 import Interaction from "./interaction.js"
-import collision, * as Collisions from "./collision.js"
+import Player from "./player.js"
+import collision, * as Collisions from "./collision.js";
 
 window.addEventListener("keydown", (e) => {
     switch (e.key) {
@@ -50,7 +51,6 @@ window.addEventListener("keyup", (e) => {
 
 function checkCollision(entity1: Player, entity2: Interaction, playerDirection: string) {
     if (playerDirection == 'none') return false;
-    // console.log(entity2.bondary.position.x, entity2.position.x);
     if (playerDirection == 'd') {
         return (
             entity1.position.x + entity1.width + 5 >= entity2.position.x &&
@@ -82,11 +82,53 @@ function checkCollision(entity1: Player, entity2: Interaction, playerDirection: 
             entity1.position.y <= entity2.position.y &&
             entity1.position.y + entity2.height + 12 >= entity2.position.y
         )
+    } else if (playerDirection == 'all') {
+        return (
+            entity1.position.x + entity1.width >= entity2.position.x &&
+            entity1.position.x <= entity2.position.x + entity2.width - 25 &&
+            entity1.position.y <= entity2.position.y &&
+            entity1.position.y + entity2.height + 12 >= entity2.position.y
+        )
     }
     
 }
 
 function animate() {
+    if (checkInteraction('all')) {
+        
+        dialogue.text = "[E] TO OPEN CHEST";
+        window.addEventListener('keydown', (e) => {
+            if (e.key == 'e') {
+                dialogue.isUsed = true;
+            } 
+        })
+    } else {
+        dialogue.text = "";
+    }
+    if (dialogue.isUsed) {
+        dialogue.text = "YOU OPENED CHEST.";
+        if (dialogue.frameCount < 90) {
+            dialogue.frameCount++;
+        }
+        if (dialogue.frameCount >= 90) {
+            dialogue.text = "";
+        }
+    }
+
+    dialogue.draw();
+
+    // window.addEventListener("keydown", (e) => {
+    //     if (checkInteraction()) {
+    //         dialogue("BONJOUR", player);
+    //     }
+
+    //     if (e.key == 'e') {
+    //         if (checkInteraction()) {
+    //             dialogue("BONJOUR", player);
+    //         }
+    //     }
+    // })
+
     if (lastkey == 'd' && dPressed) {
         player.frame.y = 258;
     } else if (lastkey == 's' && sPressed) {
@@ -183,21 +225,32 @@ function animate() {
     // });
         
     interactions.forEach(interaction => {
-        interaction.draw(c!, "./img/water/water.png");
+        interaction.draw(c!, "./img/chest.png");
     });
 
     pnj.draw(c);
     player.draw(c);
     pnj2.draw(c);
+    // dialogue("OUI BONJOUR.", player, 'white', '80px')
 }
 
-function checkInteraction() {
+function checkInteraction(direction = lastkey): boolean{
     for (let i=0; i < interactions.length; i++) {
         if (checkCollision(player, interactions[i], lastkey)) {
-            console.log("interaction");
+            return true;
         } 
     }
+    return false;
 }
+
+// function dialogue(text: string, who: Sprite, color = "white", fontSize = "30px font/PixelifySans-VariableFont_wght", position = {x: who.position.x-who.width/2+who.width/5, y: who.position.y}) {
+//     cText!.clearRect(0, 0, canvasText.width, canvasText.height);
+//     if (text != "") {
+//         cText!.font = "30px Arial";
+//         cText!.fillStyle = color
+//         cText!.fillText(text, position.x, position.y-18)
+//     }
+// }
 
 const offset = {
     x: -2000,
@@ -215,7 +268,7 @@ const interactionsMap = [];
 for (let i = 0;i < Collisions.default.Interactions.length;i +=100) {
     interactionsMap.push(Collisions.default.Interactions.slice(i, i+110));
 }
-console.log(interactionsMap);
+// console.log(interactionsMap);
 
 
 const mapZoomLevel = 4.5;
@@ -239,7 +292,7 @@ interactionsMap.forEach((row, i) => {
     });
 });
 
-    const canvas = document.createElement('canvas');
+const canvas = document.createElement('canvas');
 canvas.width = 1920;
 
 canvas.height = 1080;
@@ -257,13 +310,16 @@ const player = new Player(canvas);
 const pnj2 = new Sprite({x:16*4.5, y:0}, "./img/water/water.png", canvas)
 
 const movables = [background, ...boundaries, pnj, pnj2, ...interactions];
+let dialogue = new Dialogue("", {x: canvas.width/2, y: canvas.height/2}, "white")
+
+// interactions.forEach(interaction => {
+//     interaction("", {x: canvas.width/2, y: canvas.height/2}, "white")
+// });
+
+// interactions.forEach(interaction => {
+//     interaction("", {x: canvas.width/2, y: canvas.height/2}, "white") 
+// });
 
 let lastkey = ""
-
-window.addEventListener("keydown", (e) => {
-    if (e.key == 'e') {
-        checkInteraction();
-    }
-})
 
 animate();

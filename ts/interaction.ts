@@ -2,6 +2,7 @@ class Interaction {
     public position;
     public width: number;
     public height: number;
+    public isUsed: boolean = false;
     static width = 16*4.5;
     static height = 16*4.5;
     

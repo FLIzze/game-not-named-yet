@@ -3,12 +3,10 @@ import Sprite from "./sprite.js"
 class Player extends Sprite {
     public sprint: number;
     public frame;
-    public frameCount: number;
     constructor(canvas: HTMLCanvasElement) {
         super({x: canvas.width/2, y: canvas.height/2}, "../img/player/player.png", canvas);
         this.sprint = 0;
         this.frame = {x: 11, y: 22};
-        this.frameCount = 0;
     }
 
     draw(c: CanvasRenderingContext2D | null) {
