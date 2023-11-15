@@ -1,7 +1,8 @@
 import Player from "./player.js";
 import Background from "./background.js";
 import Sprite from "./sprite.js";
-import collisions from "./collision.js";
+import Interaction from "./interaction.js";
+import * as Collisions from "./collision.js";
 window.addEventListener("keydown", (e) => {
     switch (e.key) {
         case 'd':
@@ -108,6 +109,11 @@ function animate() {
                 moving = false;
             }
         }
+        for (let i = 0; i < interactions.length; i++) {
+            if (checkCollision(player, interactions[i], lastkey)) {
+                moving = false;
+            }
+        }
         if (moving)
             movables.forEach(move => {
                 move.position.x -= 2 + player.sprint;
@@ -116,6 +122,11 @@ function animate() {
     else if (aPressed && lastkey == 'a') {
         for (let i = 0; i < boundaries.length; i++) {
             if (checkCollision(player, boundaries[i], lastkey)) {
+                moving = false;
+            }
+        }
+        for (let i = 0; i < interactions.length; i++) {
+            if (checkCollision(player, interactions[i], lastkey)) {
                 moving = false;
             }
         }
@@ -130,6 +141,11 @@ function animate() {
                 moving = false;
             }
         }
+        for (let i = 0; i < interactions.length; i++) {
+            if (checkCollision(player, interactions[i], lastkey)) {
+                moving = false;
+            }
+        }
         if (moving)
             movables.forEach(move => {
                 move.position.y += 2 + player.sprint;
@@ -141,6 +157,11 @@ function animate() {
                 moving = false;
             }
         }
+        for (let i = 0; i < interactions.length; i++) {
+            if (checkCollision(player, interactions[i], lastkey)) {
+                moving = false;
+            }
+        }
         if (moving)
             movables.forEach(move => {
                 move.position.y -= 2 + player.sprint;
@@ -148,42 +169,52 @@ function animate() {
     }
     background.draw(c);
     // boundaries.forEach(boundary => {
-    //         checkCollision(player, boundary, "none");
-    //         boundary.draw();
-    //     });
+    //     checkCollision(player, boundary, "none");
+    //     boundary.draw();
+    // });
+    interactions.forEach(interaction => {
+        interaction.draw(c, "./img/water/water.png");
+    });
     pnj.draw(c);
     player.draw(c);
     pnj2.draw(c);
 }
+function checkInteraction() {
+    for (let i = 0; i < interactions.length; i++) {
+        if (checkCollision(player, interactions[i], lastkey)) {
+            console.log("interaction");
+        }
+    }
+}
 const offset = {
     x: -2000,
-    y: -100,
+    y: -200,
 };
 let moving = true;
 const collisionsMap = [];
-for (let i = 0; i < collisions.length; i += 110) {
-    collisionsMap.push(collisions.slice(i, i + 110));
+for (let i = 0; i < Collisions.default.Collisions.length; i += 110) {
+    collisionsMap.push(Collisions.default.Collisions.slice(i, i + 110));
 }
+const interactionsMap = [];
+for (let i = 0; i < Collisions.default.Interactions.length; i += 100) {
+    interactionsMap.push(Collisions.default.Interactions.slice(i, i + 110));
+}
+console.log(interactionsMap);
 const mapZoomLevel = 4.5;
 const tileSize = 16;
-class Boundary {
-    constructor(positionX = 0, positionY = 0) {
-        this.position = { x: positionX, y: positionY };
-        this.height = tileSize * mapZoomLevel;
-        this.width = tileSize * mapZoomLevel;
-    }
-    draw() {
-        c.fillStyle = 'red';
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
-}
-Boundary.width = tileSize * mapZoomLevel;
-Boundary.height = tileSize * mapZoomLevel;
 const boundaries = [];
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 1) {
-            boundaries.push(new Boundary(j * Boundary.width + offset.x, i * Boundary.height + offset.y));
+            boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y));
+        }
+    });
+});
+const interactions = [];
+interactionsMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol == 1) {
+            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y));
         }
     });
 });
@@ -200,6 +231,11 @@ const background = new Background(offset, canvas);
 const pnj = new Sprite({ x: -200 * 4.5, y: 0 }, "./img/water/water.png", canvas);
 const player = new Player(canvas);
 const pnj2 = new Sprite({ x: 16 * 4.5, y: 0 }, "./img/water/water.png", canvas);
-const movables = [background, ...boundaries, pnj, pnj2];
+const movables = [background, ...boundaries, pnj, pnj2, ...interactions];
 let lastkey = "";
+window.addEventListener("keydown", (e) => {
+    if (e.key == 'e') {
+        checkInteraction();
+    }
+});
 animate();

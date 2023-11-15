@@ -11,8 +11,6 @@ class Player extends Sprite {
         img.src = this.imgSrc;
         let x = this.position.x;
         let y = this.position.y;
-        let height = this.height;
-        let width = this.width;
         if (this.frameCount == 25) {
             this.frame.x += 48;
             this.frameCount = 0;
