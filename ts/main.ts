@@ -116,11 +116,11 @@ function checkForInteractions() {
                     interaction.isUsed = true;
                 }
             })
-            if (interaction.isUsed) {
-                if (interaction.name == 'chest') {
-                    interaction.imgSrc = "/img/open-chest.png";
-                }
-            } 
+            // if (interaction.isUsed) {
+            //     if (interaction.name == 'chest') {
+            //         interaction.imgSrc = "/img/open-chest.png";
+            //     }
+            // } 
         } 
     });
 }
@@ -244,7 +244,7 @@ const interactions: Array<Interaction> = []
 interactionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 70) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "chest", "img/chest.png"));
+            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "chest", "img/chest-animation.png", 4));
         } else if (symbol == 2) {
             interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "pnj", "img/player/player_left.png"));
         }
