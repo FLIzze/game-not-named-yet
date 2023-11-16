@@ -4,7 +4,7 @@ class Background {
     
     constructor(public offset: {x: number, y: number}, canvas: HTMLCanvasElement) {
         this.position = {x: offset.x, y: offset.y};
-        this.imgSrc = "/img/map.png"
+        this.imgSrc = "/img/little-map.png"
         document.body.appendChild(canvas);
     }
 

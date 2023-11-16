@@ -183,47 +183,24 @@ function playerAnimation() {
         }
     }
 }
-function dialogue(text, x = canvas.width / 2, y = canvas.height / 2) {
+function dialogue(text, x = canvas.width / 2, y = canvas.height / 2 - 20) {
     c.font = "30px Arial";
     c.fillStyle = "white";
     c.fillText(text, x, y);
 }
-const offset = {
-    x: -2000,
-    y: -200,
-};
+const mapZoomLevel = 4.5;
+const tileSize = 16;
 let sprintingSpeed = 0;
 const walkingSpeed = 1.5;
 let moving = true;
 const collisionsMap = [];
-for (let i = 0; i < Collisions.default.Collisions.length; i += 110) {
-    collisionsMap.push(Collisions.default.Collisions.slice(i, i + 110));
+for (let i = 0; i < Collisions.default.Collisions.length; i += 40) {
+    collisionsMap.push(Collisions.default.Collisions.slice(i, i + 40));
 }
 const interactionsMap = [];
-for (let i = 0; i < Collisions.default.Interactions.length; i += 100) {
-    interactionsMap.push(Collisions.default.Interactions.slice(i, i + 110));
+for (let i = 0; i < Collisions.default.Interactions.length; i += 40) {
+    interactionsMap.push(Collisions.default.Interactions.slice(i, i + 40));
 }
-const mapZoomLevel = 4.5;
-const tileSize = 16;
-const boundaries = [];
-collisionsMap.forEach((row, i) => {
-    row.forEach((symbol, j) => {
-        if (symbol == 1) {
-            boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "collision", ""));
-        }
-    });
-});
-const interactions = [];
-interactionsMap.forEach((row, i) => {
-    row.forEach((symbol, j) => {
-        if (symbol == 1) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "chest", "img/chest.png"));
-        }
-        else if (symbol == 2) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "pnj", "img/player/player_left.png"));
-        }
-    });
-});
 const canvas = document.createElement('canvas');
 canvas.width = 1920;
 canvas.height = 1080;
@@ -233,9 +210,31 @@ let dPressed = false;
 let aPressed = false;
 let wPressed = false;
 let sPressed = false;
-const background = new Background(offset, canvas);
 const player = new Player(canvas);
+const offset = {
+    x: -10 * mapZoomLevel * tileSize,
+    y: -5 * mapZoomLevel * tileSize,
+};
+const interactions = [];
+interactionsMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol == 70) {
+            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "chest", "img/chest.png"));
+        }
+        else if (symbol == 2) {
+            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "pnj", "img/player/player_left.png"));
+        }
+    });
+});
+const boundaries = [];
+collisionsMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol == 69) {
+            boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "collision", ""));
+        }
+    });
+});
+const background = new Background(offset, canvas);
 const movables = [background, ...boundaries, ...interactions];
-// let dialogue = new Dialogue("", {x: canvas.width/2, y: canvas.height/2}, "white")
 let lastkey = "";
 animate();
