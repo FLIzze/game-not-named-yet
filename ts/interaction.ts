@@ -10,7 +10,7 @@ class Interaction {
     static height = 16*4.5;
     public imgSrc: string;
     
-    constructor(positionX = 0, positionY = 0, name: string, imgSrc: string, public nmbFrames: number = 1, public spriteSize: number = 16) {
+    constructor(positionX = 0, positionY = 0, name: string, imgSrc: string, public nmbFrames: number = 1, public spriteSize: number = 16, public infiniteAnimation: number = 0) {
         this.position = {x: positionX, y: positionY}
         this.height = 16 * 4.5;
         this.width = 16 * 4.5;
@@ -24,7 +24,6 @@ class Interaction {
         let position = {x: this.position.x, y: this.position.y}
         let height = this.height;
         let width = this.width;
-        console.log(this.frameCount);
         if (this.isUsed && this.frameCount == 10 && this.frame < this.spriteSize*(this.nmbFrames-1)) {
             this.frame += 16;
             this.frameCount = 0;
@@ -34,7 +33,7 @@ class Interaction {
         img.onload = function() {
             c!.drawImage(img, frame, 0, spriteSize, spriteSize, position.x, position.y, width, height)
         }
-        if (this.isUsed) {
+        if (this.isUsed && this.frame < this.spriteSize*(this.nmbFrames-1)) {
             this.frameCount++;
         }
     }

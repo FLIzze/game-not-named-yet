@@ -109,8 +109,10 @@ function animate() {
 function checkForInteractions() {
     interactions.forEach(interaction => {
         if (checkCollision(player, interaction, lastkey)) {
-            if (!interaction.isUsed)
-            dialogue("[E] " +interaction.name.toUpperCase());
+            console.log(interaction.isUsed);
+            
+            if (!interaction.isUsed) 
+            // dialogue("[E] " +interaction.name.toUpperCase());
             window.addEventListener("keydown", (e) => {
                 if (e.key == 'e') {
                     interaction.isUsed = true;
@@ -197,7 +199,7 @@ function playerAnimation() {
 }
 
 function dialogue(text: string, x: number = canvas.width/2, y: number = canvas.height/2-20) {
-    c!.font = "30px Arial";
+    c!.font = "25px Arial";
     c!.fillStyle = "white";
     c!.fillText(text, x, y)
 }
@@ -217,11 +219,6 @@ const interactionsMap = [];
 for (let i = 0;i < Collisions.default.Interactions.length;i +=40) {
     interactionsMap.push(Collisions.default.Interactions.slice(i, i+40));
 }
-
-
-
-
-
 
 const canvas = document.createElement('canvas');
 canvas.width = 1920;

@@ -94,13 +94,14 @@ function animate() {
 function checkForInteractions() {
     interactions.forEach(interaction => {
         if (checkCollision(player, interaction, lastkey)) {
+            console.log(interaction.isUsed);
             if (!interaction.isUsed)
-                dialogue("[E] " + interaction.name.toUpperCase());
-            window.addEventListener("keydown", (e) => {
-                if (e.key == 'e') {
-                    interaction.isUsed = true;
-                }
-            });
+                // dialogue("[E] " +interaction.name.toUpperCase());
+                window.addEventListener("keydown", (e) => {
+                    if (e.key == 'e') {
+                        interaction.isUsed = true;
+                    }
+                });
             // if (interaction.isUsed) {
             //     if (interaction.name == 'chest') {
             //         interaction.imgSrc = "/img/open-chest.png";
@@ -184,7 +185,7 @@ function playerAnimation() {
     }
 }
 function dialogue(text, x = canvas.width / 2, y = canvas.height / 2 - 20) {
-    c.font = "30px Arial";
+    c.font = "25px Arial";
     c.fillStyle = "white";
     c.fillText(text, x, y);
 }

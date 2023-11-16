@@ -3,8 +3,8 @@ import Sprite from "./sprite.js"
 class Player extends Sprite {
     public frame;
     constructor(canvas: HTMLCanvasElement) {
-        super({x: canvas.width/2, y: canvas.height/2}, "../img/player/player.png", canvas);
-        this.frame = {x: 11, y: 22};
+        super({x: canvas.width/2, y: canvas.height/2}, "../img/animation-new-player.png", canvas);
+        this.frame = {x: 0, y: 0};
     }
 
     draw(c: CanvasRenderingContext2D | null) {
@@ -12,17 +12,20 @@ class Player extends Sprite {
         img.src = this.imgSrc;
         let x = this.position.x;
         let y = this.position.y;
-        if (this.frameCount == 25) {
-            this.frame.x += 48;
+        if (this.frameCount == 50) {
+            this.frame.x += 16;
             this.frameCount = 0;
         }
 
+
         let frame = {x: this.frame.x, y: this.frame.y}
         img.onload = function() {
-            c!.drawImage(img, frame.x, frame.y, 24, 42, x, y, 13*4.5*1.7, 20*4.5*1.7)
+            // arguments: img, frame.x where start the image in x axis, same for frame.y, widht, height, x, y: position in canvas, ??
+            c!.drawImage(img, frame.x, 0, 16, 32, x, y, 16*4.5, 32*4.5)
+            // c!.drawImage(img, x, y, 16*4.5, 32*4.5);
         }
-        if (this.frame.x >= 285) {
-            this.frame.x = 11;
+        if (this.frame.x >= 64) {
+            this.frame.x = 0;
         }
         this.frameCount++
     }
