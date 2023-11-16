@@ -17,16 +17,21 @@ window.addEventListener("keydown", (e) => {
         case 'w':
             wPressed = true;
             lastkey = 'w';
-            break
+            break;
         case 's':
             sPressed = true;
             lastkey = 's';
-            break
+            break;
         case ' ':
             sprintingSpeed = 1.5;
-            break
+            break;
+        case 'e':
+            ePressed = true;
+            break;
     }
 })
+
+let ePressed = false;
 
 window.addEventListener("keyup", (e) => {
     switch (e.key) {
@@ -41,10 +46,13 @@ window.addEventListener("keyup", (e) => {
             break
         case 's':
             sPressed = false;
-            break
+            break;
         case ' ':
             sprintingSpeed = 0;
-            break
+            break;
+        case 'e':
+            ePressed = false;
+            break;
     }
 })
 
@@ -109,20 +117,10 @@ function animate() {
 function checkForInteractions() {
     interactions.forEach(interaction => {
         if (checkCollision(player, interaction, lastkey)) {
-            console.log(interaction.isUsed);
-            
             if (!interaction.isUsed) 
-            // dialogue("[E] " +interaction.name.toUpperCase());
-            window.addEventListener("keydown", (e) => {
-                if (e.key == 'e') {
-                    interaction.isUsed = true;
-                }
-            })
-            // if (interaction.isUsed) {
-            //     if (interaction.name == 'chest') {
-            //         interaction.imgSrc = "/img/open-chest.png";
-            //     }
-            // } 
+            if (ePressed) {
+                interaction.isUsed = true;
+            }
         } 
     });
 }
