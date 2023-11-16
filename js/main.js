@@ -48,28 +48,28 @@ function checkCollision(entity1, entity2, playerDirection) {
     if (playerDirection == 'none')
         return false;
     if (playerDirection == 'd') {
-        return (entity1.position.x + entity1.width + 5 >= entity2.position.x &&
+        return (entity1.position.x + entity1.width + 3 >= entity2.position.x &&
             entity1.position.x <= entity2.position.x + entity2.width - 25 &&
-            entity1.position.y <= entity2.position.y &&
-            entity1.position.y + entity2.height >= entity2.position.y);
+            entity1.position.y <= entity2.position.y - entity1.height / 1.5 &&
+            entity1.position.y + entity2.height >= entity2.position.y - entity1.height / 1.5);
     }
     if (playerDirection == 'a') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
-            entity1.position.x - 5 <= entity2.position.x + entity2.width - 25 &&
-            entity1.position.y <= entity2.position.y &&
-            entity1.position.y + entity2.height >= entity2.position.y);
+            entity1.position.x - 25 <= entity2.position.x + entity2.width - 25 &&
+            entity1.position.y <= entity2.position.y - entity1.width / 1.5 &&
+            entity1.position.y + entity2.height >= entity2.position.y - entity1.height / 1.5);
     }
     if (playerDirection == 'w') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
             entity1.position.x <= entity2.position.x + entity2.width - 25 &&
-            entity1.position.y - 10 <= entity2.position.y &&
+            entity1.position.y - 10 <= entity2.position.y - entity1.width / 1.5 &&
             entity1.position.y + entity2.height >= entity2.position.y);
     }
     if (playerDirection == 's') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
             entity1.position.x <= entity2.position.x + entity2.width - 25 &&
-            entity1.position.y <= entity2.position.y &&
-            entity1.position.y + entity2.height + 12 >= entity2.position.y);
+            entity1.position.y <= entity2.position.y - entity1.width / 1.5 &&
+            entity1.position.y + entity2.height + player.height / 1.5 + 3 >= entity2.position.y);
     }
     else if (playerDirection == 'all') {
         return (entity1.position.x + entity1.width >= entity2.position.x &&
@@ -83,7 +83,7 @@ function animate() {
     moving = true;
     checkForInteractions();
     checkIfPlayerCollide();
-    playerAnimation();
+    // playerAnimation();
     c.clearRect;
     background.draw(c);
     interactions.forEach(interaction => {
@@ -211,7 +211,6 @@ let dPressed = false;
 let aPressed = false;
 let wPressed = false;
 let sPressed = false;
-const player = new Player(canvas);
 const offset = {
     x: -10 * mapZoomLevel * tileSize,
     y: -5 * mapZoomLevel * tileSize,
@@ -236,6 +235,7 @@ collisionsMap.forEach((row, i) => {
     });
 });
 const background = new Background(offset, canvas);
+const player = new Player(canvas);
 const movables = [background, ...boundaries, ...interactions];
 let lastkey = "";
 animate();

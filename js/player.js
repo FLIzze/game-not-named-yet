@@ -15,9 +15,7 @@ class Player extends Sprite {
         }
         let frame = { x: this.frame.x, y: this.frame.y };
         img.onload = function () {
-            // arguments: img, frame.x where start the image in x axis, same for frame.y, widht, height, x, y: position in canvas, ??
             c.drawImage(img, frame.x, 0, 16, 32, x, y, 16 * 4.5, 32 * 4.5);
-            // c!.drawImage(img, x, y, 16*4.5, 32*4.5);
         };
         if (this.frame.x >= 64) {
             this.frame.x = 0;
