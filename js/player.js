@@ -17,7 +17,7 @@ class Player extends Sprite {
         img.onload = function () {
             c.drawImage(img, frame.x, 0, 16, 32, x, y, 16 * 4.5, 32 * 4.5);
         };
-        if (this.frame.x >= 64) {
+        if (this.frame.x > 48) {
             this.frame.x = 0;
         }
         this.frameCount++;

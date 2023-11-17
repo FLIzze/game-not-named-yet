@@ -2,7 +2,7 @@ class Background {
     constructor(offset, canvas) {
         this.offset = offset;
         this.position = { x: offset.x, y: offset.y };
-        this.imgSrc = "/img/little-map.png";
+        this.imgSrc = "/img/map1.png";
         document.body.appendChild(canvas);
     }
     draw(c) {
