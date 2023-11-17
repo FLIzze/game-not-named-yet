@@ -86,6 +86,7 @@ function checkCollision(entity1, entity2, playerDirection) {
     }
 }
 function animate() {
+    console.log(CurrentMap);
     requestAnimationFrame(animate);
     moving = true;
     checkForInteractions();
@@ -111,7 +112,9 @@ function checkForInteractions() {
         }
         else if (interaction.name == 'exit') {
             if (checkCollision(player, interaction, lastkey)) {
-                background.imgSrc = "./img/map.png";
+                background.imgSrc = "./img/maps/map2.png";
+                CurrentMap = 2;
+                mapLoad();
             }
         }
         else if (isOnPRessurePlate) {
@@ -126,6 +129,52 @@ function checkForInteractions() {
         }
     });
 }
+function mapLoad() {
+    let collisionsMap = [];
+    let interactionsMap = [];
+    boundaries = [];
+    interactions = [];
+    if (CurrentMap == 1) {
+        for (let i = 0; i < Collisions.default.Collisions1.length; i += 40) {
+            collisionsMap.push(Collisions.default.Collisions1.slice(i, i + 40));
+        }
+        for (let i = 0; i < Collisions.default.Interactions1.length; i += 40) {
+            interactionsMap.push(Collisions.default.Interactions1.slice(i, i + 40));
+        }
+    }
+    else if (CurrentMap == 2) {
+        for (let i = 0; i < Collisions.default.Collisions2.length; i += 35) {
+            collisionsMap.push(Collisions.default.Collisions2.slice(i, i + 35));
+        }
+        for (let i = 0; i < Collisions.default.Interactions2.length; i += 35) {
+            interactionsMap.push(Collisions.default.Interactions2.slice(i, i + 35));
+        }
+    }
+    interactionsMap.forEach((row, i) => {
+        row.forEach((symbol, j) => {
+            if (symbol == 4) {
+                interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "fence", "img/fence.png", 4));
+            }
+            else if (symbol == 2) {
+                interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "pressure-plate", "img/pressure-plate.png"));
+            }
+            else if (symbol == 71) {
+                interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "exit", "img/exit.png"));
+            }
+        });
+    });
+    collisionsMap.forEach((row, i) => {
+        row.forEach((symbol, j) => {
+            if (symbol == 69) {
+                boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "collision", ""));
+            }
+        });
+    });
+    console.log(boundaries);
+    movables = [background, ...boundaries, ...interactions];
+}
+let boundaries = [];
+let interactions = [];
 function checkIfPlayerCollide() {
     if (dPressed && lastkey == 'd') {
         for (let i = 0; i < boundaries.length; i++) {
@@ -191,16 +240,27 @@ function dialogue(text, x = canvas.width / 2, y = canvas.height / 2 - 20) {
 }
 const mapZoomLevel = 4.5;
 const tileSize = 16;
+let CurrentMap = 1;
 let sprintingSpeed = 0;
 const walkingSpeed = 1.5;
 let moving = true;
 const collisionsMap = [];
-for (let i = 0; i < Collisions.default.Collisions.length; i += 40) {
-    collisionsMap.push(Collisions.default.Collisions.slice(i, i + 40));
-}
 const interactionsMap = [];
-for (let i = 0; i < Collisions.default.Interactions.length; i += 40) {
-    interactionsMap.push(Collisions.default.Interactions.slice(i, i + 40));
+if (CurrentMap == 1) {
+    for (let i = 0; i < Collisions.default.Collisions1.length; i += 40) {
+        collisionsMap.push(Collisions.default.Collisions1.slice(i, i + 40));
+    }
+    for (let i = 0; i < Collisions.default.Interactions1.length; i += 40) {
+        interactionsMap.push(Collisions.default.Interactions1.slice(i, i + 40));
+    }
+}
+else if (CurrentMap == 2) {
+    for (let i = 0; i < Collisions.default.Collisions2.length; i += 40) {
+        collisionsMap.push(Collisions.default.Collisions2.slice(i, i + 40));
+    }
+    for (let i = 0; i < Collisions.default.Interactions2.length; i += 40) {
+        interactionsMap.push(Collisions.default.Interactions2.slice(i, i + 40));
+    }
 }
 const canvas = document.createElement('canvas');
 canvas.width = 1920;
@@ -215,35 +275,12 @@ const offset = {
     x: -0.5 * tileSize * mapZoomLevel,
     y: 1.5 * tileSize * mapZoomLevel,
 };
-const interactions = [];
-interactionsMap.forEach((row, i) => {
-    row.forEach((symbol, j) => {
-        if (symbol == 4) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "fence", "img/fence.png", 4));
-        }
-        else if (symbol == 2) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "pressure-plate", "img/pressure-plate.png"));
-        }
-        else if (symbol == 71) {
-            interactions.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "exit", "img/exit.png"));
-        }
-    });
-});
-// interactions.forEach(interaction => {
-//     if (interaction.name == "fence") {
-//         interaction.imgSrc = "";
-//     }
-// });
-const boundaries = [];
-collisionsMap.forEach((row, i) => {
-    row.forEach((symbol, j) => {
-        if (symbol == 69) {
-            boundaries.push(new Interaction(j * Interaction.width + offset.x, i * Interaction.height + offset.y, "collision", ""));
-        }
-    });
-});
 const background = new Background(offset, canvas);
+let movables = [background, ...boundaries, ...interactions];
 const player = new Player(canvas);
-const movables = [background, ...boundaries, ...interactions];
+mapLoad();
 let lastkey = "";
+// boundaries.forEach(boudnary => {
+//     boudnary.draw(c!);
+// });
 animate();
